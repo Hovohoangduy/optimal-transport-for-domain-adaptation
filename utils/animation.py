@@ -50,4 +50,4 @@ def animate_barycentric_transport(features_source, features_target, P, save_path
     anim = FuncAnimation(fig, update, frames=total_frames, interval=50, blit=True)
     anim.save(save_path, writer=PillowWriter(fps=20))
     plt.close()
-    print("Animation gif save: {save_path}")
+    print(f"Animation gif save: {save_path}")
