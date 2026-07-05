@@ -18,7 +18,7 @@ def animate_barycentric_transport(features_source, features_target, P, save_path
     P_torch = P.detach()
     ft_torch = features_target.detach()
 
-    row_sums = P_torch.sum(dim=1, keepdim=True) * 1e-8
+    row_sums = P_torch.sum(dim=1, keepdim=True) + 1e-8
     P_norm = P_torch / row_sums
 
     # [N, M] @ [M, D] -> [N, D]
@@ -27,9 +27,9 @@ def animate_barycentric_transport(features_source, features_target, P, save_path
 
     fig, ax = plt.subplots(figsize=(10, 8))
 
-    ax.scatter(ft_2d[:, 0], ft_2d[:, 1], c="blue", alpha=0.15, label='Target Distribution (USPS)', s=30)
+    ax.scatter(ft_2d[:, 0], ft_2d[:, 1], c='blue', alpha=0.15, label='Target Distribution (USPS)', s=30)
 
-    scatter_source = ax.scatter(fs_2d[:, 0], fs_2d[:, 1], c='red', alpha=0.6, label="Transported Source (MNIST)", s=20)
+    scatter_source = ax.scatter(fs_2d[:, 0], fs_2d[:, 1], c='red', alpha=0.6, label='Transported Source (MNIST)', s=20)
     ax.set_title("Optimal Transport Interpolation")
     ax.legend()
     ax.grid(True, alpha=0.3)
@@ -45,7 +45,7 @@ def animate_barycentric_transport(features_source, features_target, P, save_path
         t = frame / total_frames
         current_pos = (1 - t) * fs_2d + t * dest_2d
         scatter_source.set_offsets(current_pos)
-        return scatter_source
+        return scatter_source,
     
     anim = FuncAnimation(fig, update, frames=total_frames, interval=50, blit=True)
     anim.save(save_path, writer=PillowWriter(fps=20))

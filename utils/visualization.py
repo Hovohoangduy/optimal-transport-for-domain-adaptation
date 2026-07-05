@@ -8,7 +8,7 @@ def plot_matching_pairs(images_source, images_target, P, num_pairs=5, save_path=
         P = P.detach().cpu().numpy()
     
     matches = np.argmax(P, axis=1)
-    indices = np.random.choice(len(images_source), num_pairs, replace=True)
+    indices = np.random.choice(len(images_source), num_pairs, replace=False)
     
     plt.figure(figsize=(6, 2 * num_pairs))
     for i, idx_source in enumerate(indices):
@@ -18,14 +18,16 @@ def plot_matching_pairs(images_source, images_target, P, num_pairs=5, save_path=
         plt.subplot(num_pairs, 2, 2*i + 1)
         img_s = images_source[idx_source].permute(1, 2, 0).cpu().numpy()
         img_s = (img_s * 0.5) + 0.5
+        plt.imshow(img_s.squeeze(), cmap='gray')
         plt.axis('off')
         if i == 0:
             plt.title("Source (MNIST)")
         
         # image target (USPS)
-        plt.subplot(num_pairs, 2, 2*i + 1)
+        plt.subplot(num_pairs, 2, 2*i + 2)
         img_t = images_target[idx_target].permute(1, 2, 0).cpu().numpy()
         img_t = (img_t * 0.5) + 0.5
+        plt.imshow(img_t.squeeze(), cmap='gray')
         plt.axis('off')
         if i == 0:
             plt.title("Target (USPS Match)")
